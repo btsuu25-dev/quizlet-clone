@@ -14,7 +14,7 @@ Backend:
 - Express.js
 
 Database:
-- PostgreSQL
+- sqlite
 - Prisma ORM
 
 ## Core Features
