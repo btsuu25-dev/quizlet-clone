@@ -1,0 +1,8 @@
+node_modules
+.env
+.next
+*.db
+*.db-journal
+.DS_Store
+dist
+build
