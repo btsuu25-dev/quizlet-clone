@@ -16,6 +16,30 @@ interface Question {
   options: string[];
 }
 
+// Synthesize a cheerful "ting ting" chime using Web Audio API
+function playCorrectSound() {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const notes = [1046.5, 1318.5]; // C6 → E6
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      const t = ctx.currentTime + i * 0.18;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.35, t + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+      osc.start(t);
+      osc.stop(t + 0.5);
+    });
+  } catch (e) {
+    // Silently ignore if AudioContext is unavailable
+  }
+}
+
 export default function FolderQuizModePage() {
   const params = useParams();
   const folderId = params.id as string;
@@ -100,6 +124,7 @@ export default function FolderQuizModePage() {
     const currentQ = questions[currentIndex];
     if (option === currentQ.correctAnswer) {
       setScore(prev => prev + 1);
+      playCorrectSound();
     } else {
       setWrongAnswers(prev => [...prev, { question: currentQ, selected: option }]);
     }
