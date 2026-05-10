@@ -25,6 +25,8 @@ export default function HomePage() {
   const [newProject, setNewProject] = useState({ title: '', description: '' });
   const [newFolderTitle, setNewFolderTitle] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
+  const [folderToDelete, setFolderToDelete] = useState<Folder | null>(null);
 
   useEffect(() => {
     checkAuthAndLoad();
@@ -76,20 +78,20 @@ export default function HomePage() {
     } catch (error) { console.error(error); }
   };
 
-  const handleDelete = async (id: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    if (!confirm('Bạn có chắc chắn muốn xóa học phần này không?')) return;
+  const confirmDeleteProject = async () => {
+    if (!projectToDelete) return;
     try {
-      await api.deleteProject(id);
+      await api.deleteProject(projectToDelete.id);
+      setProjectToDelete(null);
       checkAuthAndLoad();
     } catch (error) { console.error(error); }
   };
 
-  const handleDeleteFolder = async (id: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    if (!confirm('Bạn có chắc chắn muốn xóa thư mục này không? Các học phần bên trong vẫn sẽ được giữ lại.')) return;
+  const confirmDeleteFolder = async () => {
+    if (!folderToDelete) return;
     try {
-      await api.deleteFolder(id);
+      await api.deleteFolder(folderToDelete.id);
+      setFolderToDelete(null);
       checkAuthAndLoad();
     } catch (error) { console.error(error); }
   };
@@ -347,7 +349,7 @@ export default function HomePage() {
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 dark:hover:text-red-400 transition-colors z-10"
-                            onClick={(e) => { e.stopPropagation(); handleDelete(project.id, e); }}
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setProjectToDelete(project); }}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -395,7 +397,7 @@ export default function HomePage() {
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 dark:hover:text-red-400 transition-colors z-10"
-                            onClick={(e) => handleDeleteFolder(folder.id, e)}
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setFolderToDelete(folder); }}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -407,6 +409,36 @@ export default function HomePage() {
               )}
             </div>
           )}
+          {/* Delete Dialogs */}
+          <Dialog open={!!projectToDelete} onOpenChange={(open) => !open && setProjectToDelete(null)}>
+            <DialogContent className="sm:max-w-[400px] rounded-2xl p-0 overflow-hidden border-0 shadow-2xl bg-white dark:bg-slate-950">
+              <DialogHeader className="p-6 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+                <DialogTitle className="text-xl font-bold text-slate-900 dark:text-white">Xác nhận xóa học phần</DialogTitle>
+                <DialogDescription className="mt-2 text-base text-slate-500">
+                  Bạn có chắc chắn muốn xóa học phần <strong className="text-slate-900 dark:text-white">{projectToDelete?.title}</strong> không? Hành động này không thể hoàn tác.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="p-4 sm:p-6 flex flex-col-reverse sm:flex-row gap-2 sm:justify-end bg-white dark:bg-slate-950">
+                <Button variant="outline" className="w-full sm:w-auto h-11 px-6 rounded-full font-medium" onClick={() => setProjectToDelete(null)}>Hủy</Button>
+                <Button variant="destructive" className="w-full sm:w-auto h-11 px-6 rounded-full font-medium shadow-sm" onClick={confirmDeleteProject}>Xóa học phần</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          <Dialog open={!!folderToDelete} onOpenChange={(open) => !open && setFolderToDelete(null)}>
+            <DialogContent className="sm:max-w-[400px] rounded-2xl p-0 overflow-hidden border-0 shadow-2xl bg-white dark:bg-slate-950">
+              <DialogHeader className="p-6 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+                <DialogTitle className="text-xl font-bold text-slate-900 dark:text-white">Xác nhận xóa thư mục</DialogTitle>
+                <DialogDescription className="mt-2 text-base text-slate-500">
+                  Bạn có chắc chắn muốn xóa thư mục <strong className="text-slate-900 dark:text-white">{folderToDelete?.title}</strong> không? Các học phần bên trong vẫn sẽ được giữ lại.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="p-4 sm:p-6 flex flex-col-reverse sm:flex-row gap-2 sm:justify-end bg-white dark:bg-slate-950">
+                <Button variant="outline" className="w-full sm:w-auto h-11 px-6 rounded-full font-medium" onClick={() => setFolderToDelete(null)}>Hủy</Button>
+                <Button variant="destructive" className="w-full sm:w-auto h-11 px-6 rounded-full font-medium shadow-sm" onClick={confirmDeleteFolder}>Xóa thư mục</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </main>
     </div>
