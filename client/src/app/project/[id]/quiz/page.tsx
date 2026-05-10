@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, CheckCircle2, XCircle, RotateCcw, Trophy, Volume2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, XCircle, RotateCcw, Trophy } from 'lucide-react';
 import { api, Project, Flashcard } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -21,27 +21,35 @@ let sharedAudioCtx: AudioContext | null = null;
 
 // Synthesize a cheerful "ting ting" chime using Web Audio API
 function playCorrectSound() {
+  if (typeof window === 'undefined') return;
   try {
     if (!sharedAudioCtx) {
-      sharedAudioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      sharedAudioCtx = new AudioCtx();
     }
     if (sharedAudioCtx.state === 'suspended') {
       sharedAudioCtx.resume();
     }
     
+    const now = sharedAudioCtx.currentTime + 0.05; // Add slight delay to ensure future scheduling
     const notes = [1046.5, 1318.5]; // C6 → E6
+    
     notes.forEach((freq, i) => {
-      const osc = sharedAudioCtx!.createOscillator();
-      const gain = sharedAudioCtx!.createGain();
+      if (!sharedAudioCtx) return;
+      const osc = sharedAudioCtx.createOscillator();
+      const gain = sharedAudioCtx.createGain();
       osc.connect(gain);
-      gain.connect(sharedAudioCtx!.destination);
+      gain.connect(sharedAudioCtx.destination);
+      
       osc.type = 'sine';
-      osc.frequency.value = freq;
-      const t = sharedAudioCtx!.currentTime + i * 0.15;
+      osc.frequency.setValueAtTime(freq, now + i * 0.15);
+      
+      const t = now + i * 0.15;
       gain.gain.setValueAtTime(0, t);
-      // Increased volume from 0.35 to 0.8
-      gain.gain.linearRampToValueAtTime(0.8, t + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+      gain.gain.linearRampToValueAtTime(1, t + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
+      
       osc.start(t);
       osc.stop(t + 0.5);
     });
@@ -51,25 +59,34 @@ function playCorrectSound() {
 }
 
 function playWrongSound() {
+  if (typeof window === 'undefined') return;
   try {
     if (!sharedAudioCtx) {
-      sharedAudioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      sharedAudioCtx = new AudioCtx();
     }
     if (sharedAudioCtx.state === 'suspended') {
       sharedAudioCtx.resume();
     }
-    const osc = sharedAudioCtx!.createOscillator();
-    const gain = sharedAudioCtx!.createGain();
+    if (!sharedAudioCtx) return;
+    
+    const now = sharedAudioCtx.currentTime + 0.05;
+    const osc = sharedAudioCtx.createOscillator();
+    const gain = sharedAudioCtx.createGain();
+    
     osc.connect(gain);
-    gain.connect(sharedAudioCtx!.destination);
+    gain.connect(sharedAudioCtx.destination);
+    
     osc.type = 'sawtooth';
-    osc.frequency.value = 200; 
-    const t = sharedAudioCtx!.currentTime;
-    gain.gain.setValueAtTime(0, t);
-    gain.gain.linearRampToValueAtTime(0.3, t + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
-    osc.start(t);
-    osc.stop(t + 0.3);
+    osc.frequency.setValueAtTime(200, now); 
+    
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.5, now + 0.05);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+    
+    osc.start(now);
+    osc.stop(now + 0.3);
   } catch (e) {
     console.error("Audio error:", e);
   }
@@ -90,15 +107,6 @@ export default function QuizModePage() {
   const [score, setScore] = useState(0);
   const [showResults, setShowResults] = useState(false);
   const [wrongAnswers, setWrongAnswers] = useState<{question: Question, selected: string}[]>([]);
-
-  const playAudio = (e: React.MouseEvent, text: string) => {
-    e.stopPropagation();
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      window.speechSynthesis.speak(utterance);
-    }
-  };
 
   useEffect(() => {
     if (projectId) {
@@ -298,20 +306,9 @@ export default function QuizModePage() {
         
         <div className="mb-10 text-center">
           <span className="text-sm font-semibold text-indigo-500 uppercase tracking-widest mb-4 block">Câu hỏi</span>
-          <div className="flex items-center justify-center gap-4">
-            <h2 className="text-2xl md:text-4xl font-medium text-slate-900 dark:text-white leading-relaxed">
-              {currentQ.text}
-            </h2>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={(e) => playAudio(e, currentQ.text)}
-              className="text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-full h-10 w-10 shrink-0"
-              title="Nghe câu hỏi"
-            >
-              <Volume2 className="h-5 w-5" />
-            </Button>
-          </div>
+          <h2 className="text-2xl md:text-4xl font-medium text-slate-900 dark:text-white leading-relaxed">
+            {currentQ.text}
+          </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -335,26 +332,17 @@ export default function QuizModePage() {
             }
 
             return (
-              <div
+              <button
                 key={idx}
                 onClick={() => handleSelectOption(option)}
-                className={`text-left p-6 rounded-xl border-2 transition-all duration-200 flex justify-between items-center group cursor-pointer ${
+                disabled={isAnswered}
+                className={`text-left p-6 rounded-xl border-2 transition-all duration-200 flex justify-between items-center ${
                   !isAnswered ? 'active:scale-[0.98]' : 'cursor-default'
                 } ${stateClass}`}
               >
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={(e) => playAudio(e, option)}
-                    className="h-8 w-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 opacity-0 group-hover:opacity-100 transition-opacity text-slate-500 hover:text-indigo-600 shrink-0"
-                    title="Nghe đáp án"
-                    disabled={isAnswered}
-                  >
-                    <Volume2 className="h-4 w-4" />
-                  </button>
-                  <span className="text-lg font-medium">{option}</span>
-                </div>
+                <span className="text-lg font-medium">{option}</span>
                 {icon}
-              </div>
+              </button>
             );
           })}
         </div>
