@@ -166,7 +166,7 @@ export default function ProjectPage() {
                         <p className="text-sm text-slate-500 mt-1 mb-4">Chép và dán từ Word, Excel, Google Docs, v.v.</p>
                         <Dialog open={isImportOpen} onOpenChange={setIsImportOpen}>
                           <DialogTrigger render={<Button className="w-full text-base font-medium">Mở cửa sổ nhập dữ liệu</Button>} />
-                          <DialogContent className="w-[calc(100%-1rem)] max-w-4xl h-[90vh] sm:h-[85vh] flex flex-col p-0 gap-0 overflow-hidden rounded-2xl shadow-2xl border-0 bg-white dark:bg-slate-950">
+                          <DialogContent className="w-[calc(100%-1rem)] max-w-5xl h-[90vh] sm:h-[85vh] flex flex-col p-0 gap-0 overflow-hidden rounded-2xl shadow-2xl border-0 bg-white dark:bg-slate-950">
                             <DialogHeader className="p-5 sm:px-8 sm:py-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0">
                               <DialogTitle className="text-xl sm:text-2xl font-bold flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3 text-slate-900 dark:text-white">
                                 Nhập dữ liệu 
