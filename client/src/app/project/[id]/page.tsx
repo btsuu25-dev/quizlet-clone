@@ -185,27 +185,39 @@ export default function ProjectPage() {
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-12 p-2">
                                 <div className="space-y-4">
                                   <Label className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Giữa thuật ngữ và định nghĩa</Label>
-                                  <RadioGroup value={termSeparator} onValueChange={setTermSeparator} className="space-y-3">
-                                    <div className="flex items-center space-x-3"><RadioGroupItem value="tab" id="t-tab" className="w-5 h-5 text-indigo-600 border-indigo-600" /><Label htmlFor="t-tab" className="text-base font-medium cursor-pointer">Tab</Label></div>
-                                    <div className="flex items-center space-x-3"><RadioGroupItem value="comma" id="t-comma" className="w-5 h-5 text-indigo-600 border-indigo-600" /><Label htmlFor="t-comma" className="text-base font-medium cursor-pointer">Phẩy</Label></div>
-                                    <div className="flex items-center space-x-3 h-10">
-                                      <RadioGroupItem value="custom" id="t-custom" className="w-5 h-5 text-indigo-600 border-indigo-600" />
-                                      <Label htmlFor="t-custom" className="text-base font-medium cursor-pointer w-24">Tùy chỉnh</Label>
-                                      {termSeparator === 'custom' && <Input value={customTermSep} onChange={e => setCustomTermSep(e.target.value)} onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()} className="w-20 h-10 text-center font-bold border-slate-300" />}
-                                    </div>
-                                  </RadioGroup>
+                                  <div className="relative">
+                                    <RadioGroup value={termSeparator} onValueChange={setTermSeparator} className="space-y-3">
+                                      <div className="flex items-center space-x-3 h-10"><RadioGroupItem value="tab" id="t-tab" className="w-5 h-5 text-indigo-600 border-indigo-600" /><Label htmlFor="t-tab" className="text-base font-medium cursor-pointer">Tab</Label></div>
+                                      <div className="flex items-center space-x-3 h-10"><RadioGroupItem value="comma" id="t-comma" className="w-5 h-5 text-indigo-600 border-indigo-600" /><Label htmlFor="t-comma" className="text-base font-medium cursor-pointer">Phẩy</Label></div>
+                                      <div className="flex items-center space-x-3 h-10">
+                                        <RadioGroupItem value="custom" id="t-custom" className="w-5 h-5 text-indigo-600 border-indigo-600" />
+                                        <Label htmlFor="t-custom" className="text-base font-medium cursor-pointer w-24">Tùy chỉnh</Label>
+                                      </div>
+                                    </RadioGroup>
+                                    {termSeparator === 'custom' && (
+                                      <div className="absolute bottom-0 left-[140px]">
+                                        <Input value={customTermSep} onChange={e => setCustomTermSep(e.target.value)} className="w-20 h-10 text-center font-bold border-slate-300" />
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
                                 <div className="space-y-4">
                                   <Label className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Giữa các thẻ</Label>
-                                  <RadioGroup value={cardSeparator} onValueChange={setCardSeparator} className="space-y-3">
-                                    <div className="flex items-center space-x-3"><RadioGroupItem value="newline" id="c-nl" className="w-5 h-5 text-indigo-600 border-indigo-600" /><Label htmlFor="c-nl" className="text-base font-medium cursor-pointer">Dòng mới</Label></div>
-                                    <div className="flex items-center space-x-3"><RadioGroupItem value="semicolon" id="c-semi" className="w-5 h-5 text-indigo-600 border-indigo-600" /><Label htmlFor="c-semi" className="text-base font-medium cursor-pointer">Chấm phẩy</Label></div>
-                                    <div className="flex items-center space-x-3 h-10">
-                                      <RadioGroupItem value="custom" id="c-custom" className="w-5 h-5 text-indigo-600 border-indigo-600" />
-                                      <Label htmlFor="c-custom" className="text-base font-medium cursor-pointer w-24">Tùy chỉnh</Label>
-                                      {cardSeparator === 'custom' && <Input value={customCardSep} onChange={e => setCustomCardSep(e.target.value)} onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()} className="w-20 h-10 text-center font-bold border-slate-300" />}
-                                    </div>
-                                  </RadioGroup>
+                                  <div className="relative">
+                                    <RadioGroup value={cardSeparator} onValueChange={setCardSeparator} className="space-y-3">
+                                      <div className="flex items-center space-x-3 h-10"><RadioGroupItem value="newline" id="c-nl" className="w-5 h-5 text-indigo-600 border-indigo-600" /><Label htmlFor="c-nl" className="text-base font-medium cursor-pointer">Dòng mới</Label></div>
+                                      <div className="flex items-center space-x-3 h-10"><RadioGroupItem value="semicolon" id="c-semi" className="w-5 h-5 text-indigo-600 border-indigo-600" /><Label htmlFor="c-semi" className="text-base font-medium cursor-pointer">Chấm phẩy</Label></div>
+                                      <div className="flex items-center space-x-3 h-10">
+                                        <RadioGroupItem value="custom" id="c-custom" className="w-5 h-5 text-indigo-600 border-indigo-600" />
+                                        <Label htmlFor="c-custom" className="text-base font-medium cursor-pointer w-24">Tùy chỉnh</Label>
+                                      </div>
+                                    </RadioGroup>
+                                    {cardSeparator === 'custom' && (
+                                      <div className="absolute bottom-0 left-[140px]">
+                                        <Input value={customCardSep} onChange={e => setCustomCardSep(e.target.value)} className="w-20 h-10 text-center font-bold border-slate-300" />
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
 
