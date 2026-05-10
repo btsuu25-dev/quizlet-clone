@@ -191,7 +191,7 @@ export default function ProjectPage() {
                                     <div className="flex items-center space-x-3 h-10">
                                       <RadioGroupItem value="custom" id="t-custom" className="w-5 h-5 text-indigo-600 border-indigo-600" />
                                       <Label htmlFor="t-custom" className="text-base font-medium cursor-pointer w-24">Tùy chỉnh</Label>
-                                      {termSeparator === 'custom' && <Input value={customTermSep} onChange={e => setCustomTermSep(e.target.value)} className="w-20 h-10 text-center font-bold border-slate-300" />}
+                                      {termSeparator === 'custom' && <Input value={customTermSep} onChange={e => setCustomTermSep(e.target.value)} onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()} className="w-20 h-10 text-center font-bold border-slate-300" />}
                                     </div>
                                   </RadioGroup>
                                 </div>
@@ -203,7 +203,7 @@ export default function ProjectPage() {
                                     <div className="flex items-center space-x-3 h-10">
                                       <RadioGroupItem value="custom" id="c-custom" className="w-5 h-5 text-indigo-600 border-indigo-600" />
                                       <Label htmlFor="c-custom" className="text-base font-medium cursor-pointer w-24">Tùy chỉnh</Label>
-                                      {cardSeparator === 'custom' && <Input value={customCardSep} onChange={e => setCustomCardSep(e.target.value)} className="w-20 h-10 text-center font-bold border-slate-300" />}
+                                      {cardSeparator === 'custom' && <Input value={customCardSep} onChange={e => setCustomCardSep(e.target.value)} onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()} className="w-20 h-10 text-center font-bold border-slate-300" />}
                                     </div>
                                   </RadioGroup>
                                 </div>
