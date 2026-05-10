@@ -50,7 +50,9 @@
 
 :root {
   /* Light Mode - Quizlet Inspired */
-  --background: oklch(0.98 0.005 260); /* Very light gray-blue background (#f6f7fb) */
+  --background: #c8dff0; /* Light blue base for grid background */
+  --grid-line-color: rgba(255, 255, 255, 0.7); /* White grid lines */
+  --grid-size: 32px; /* Size of each grid cell */
   --foreground: oklch(0.2 0.02 260); /* Deep slate for text */
   
   --card: oklch(1 0 0); /* Pure white cards */
@@ -89,6 +91,8 @@
 .dark {
   /* Dark Mode - Professional Navy */
   --background: oklch(0.18 0.02 260); /* Deep Navy #0a0b14 */
+  --grid-line-color: rgba(255, 255, 255, 0.05); /* Subtle grid lines in dark mode */
+  --grid-size: 32px;
   --foreground: oklch(0.96 0.01 260);
   
   --card: oklch(0.22 0.02 260); /* Slightly lighter navy for cards */
@@ -126,7 +130,12 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground transition-colors duration-300;
+    @apply text-foreground transition-colors duration-300;
+    background-color: var(--background);
+    background-image:
+      linear-gradient(var(--grid-line-color) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line-color) 1px, transparent 1px);
+    background-size: var(--grid-size) var(--grid-size);
   }
   html {
     @apply font-sans;
