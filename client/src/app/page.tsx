@@ -101,7 +101,7 @@ export default function HomePage() {
   };
 
   if (loading) {
-    return <div className="flex items-center justify-center min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-500">Đang tải...</div>;
+    return <div className="flex items-center justify-center min-h-screen text-slate-500">Đang tải...</div>;
   }
 
   if (!user) return null;
@@ -179,7 +179,7 @@ export default function HomePage() {
   );
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950">
+    <div className="flex min-h-screen">
 
       {/* MOBILE OVERLAY */}
       {isSidebarOpen && (
