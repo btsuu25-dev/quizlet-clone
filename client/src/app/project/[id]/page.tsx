@@ -165,67 +165,75 @@ export default function ProjectPage() {
                         <h3 className="font-medium text-lg">Nhập dữ liệu lớn</h3>
                         <p className="text-sm text-slate-500 mt-1 mb-4">Chép và dán từ Word, Excel, Google Docs, v.v.</p>
                         <Dialog open={isImportOpen} onOpenChange={setIsImportOpen}>
-                          <DialogTrigger render={<Button className="w-full">Mở cửa sổ nhập dữ liệu</Button>} />
-                          <DialogContent className="w-[calc(100%-1rem)] max-w-5xl h-[90vh] sm:h-[85vh] flex flex-col p-0 gap-0 overflow-hidden">
-                            <DialogHeader className="p-4 sm:p-6 pb-4 border-b shrink-0">
-                              <DialogTitle className="text-lg sm:text-xl">
-                                Nhập dữ liệu <span className="text-sm font-normal text-slate-500 ml-2 hidden sm:inline">Chép và dán dữ liệu ở đây</span>
+                          <DialogTrigger render={<Button className="w-full text-base font-medium">Mở cửa sổ nhập dữ liệu</Button>} />
+                          <DialogContent className="w-[calc(100%-1rem)] max-w-4xl h-[90vh] sm:h-[85vh] flex flex-col p-0 gap-0 overflow-hidden rounded-2xl shadow-2xl border-0 bg-white dark:bg-slate-950">
+                            <DialogHeader className="p-5 sm:px-8 sm:py-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0">
+                              <DialogTitle className="text-xl sm:text-2xl font-bold flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3 text-slate-900 dark:text-white">
+                                Nhập dữ liệu 
+                                <span className="text-sm sm:text-base font-normal text-slate-500">Chép và dán dữ liệu ở đây</span>
                               </DialogTitle>
                             </DialogHeader>
-                            <div className="flex-1 overflow-y-auto p-4 sm:p-6 flex flex-col gap-6">
+                            <div className="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-950 p-5 sm:p-8 flex flex-col gap-8">
+                              
                               <Textarea
                                 placeholder={"Từ 1\tĐịnh nghĩa 1\nTừ 2\tĐịnh nghĩa 2"}
                                 value={importText}
                                 onChange={(e) => setImportText(e.target.value)}
-                                className="min-h-[150px] sm:min-h-[200px] font-mono text-sm resize-y"
+                                className="min-h-[200px] sm:min-h-[250px] font-sans text-base leading-relaxed p-5 border-2 border-indigo-400 dark:border-indigo-600 bg-white dark:bg-slate-900 shadow-sm resize-y rounded-xl focus-visible:border-indigo-500 focus-visible:ring-4 focus-visible:ring-indigo-500/20 transition-all"
                               />
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-12 p-2">
                                 <div className="space-y-4">
-                                  <Label className="text-base font-semibold">Giữa thuật ngữ và định nghĩa</Label>
-                                  <RadioGroup value={termSeparator} onValueChange={setTermSeparator}>
-                                    <div className="flex items-center space-x-2"><RadioGroupItem value="tab" id="t-tab" /><Label htmlFor="t-tab" className="font-normal cursor-pointer">Tab</Label></div>
-                                    <div className="flex items-center space-x-2"><RadioGroupItem value="comma" id="t-comma" /><Label htmlFor="t-comma" className="font-normal cursor-pointer">Phẩy</Label></div>
-                                    <div className="flex items-center space-x-2 h-10">
-                                      <RadioGroupItem value="custom" id="t-custom" />
-                                      <Label htmlFor="t-custom" className="font-normal cursor-pointer w-24">Tùy chỉnh</Label>
-                                      {termSeparator === 'custom' && <Input value={customTermSep} onChange={e => setCustomTermSep(e.target.value)} className="w-20 h-8" />}
+                                  <Label className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Giữa thuật ngữ và định nghĩa</Label>
+                                  <RadioGroup value={termSeparator} onValueChange={setTermSeparator} className="space-y-3">
+                                    <div className="flex items-center space-x-3"><RadioGroupItem value="tab" id="t-tab" className="w-5 h-5 text-indigo-600 border-indigo-600" /><Label htmlFor="t-tab" className="text-base font-medium cursor-pointer">Tab</Label></div>
+                                    <div className="flex items-center space-x-3"><RadioGroupItem value="comma" id="t-comma" className="w-5 h-5 text-indigo-600 border-indigo-600" /><Label htmlFor="t-comma" className="text-base font-medium cursor-pointer">Phẩy</Label></div>
+                                    <div className="flex items-center space-x-3 h-10">
+                                      <RadioGroupItem value="custom" id="t-custom" className="w-5 h-5 text-indigo-600 border-indigo-600" />
+                                      <Label htmlFor="t-custom" className="text-base font-medium cursor-pointer w-24">Tùy chỉnh</Label>
+                                      {termSeparator === 'custom' && <Input value={customTermSep} onChange={e => setCustomTermSep(e.target.value)} className="w-20 h-10 text-center font-bold border-slate-300" />}
                                     </div>
                                   </RadioGroup>
                                 </div>
                                 <div className="space-y-4">
-                                  <Label className="text-base font-semibold">Giữa các thẻ</Label>
-                                  <RadioGroup value={cardSeparator} onValueChange={setCardSeparator}>
-                                    <div className="flex items-center space-x-2"><RadioGroupItem value="newline" id="c-nl" /><Label htmlFor="c-nl" className="font-normal cursor-pointer">Dòng mới</Label></div>
-                                    <div className="flex items-center space-x-2"><RadioGroupItem value="semicolon" id="c-semi" /><Label htmlFor="c-semi" className="font-normal cursor-pointer">Chấm phẩy</Label></div>
-                                    <div className="flex items-center space-x-2 h-10">
-                                      <RadioGroupItem value="custom" id="c-custom" />
-                                      <Label htmlFor="c-custom" className="font-normal cursor-pointer w-24">Tùy chỉnh</Label>
-                                      {cardSeparator === 'custom' && <Input value={customCardSep} onChange={e => setCustomCardSep(e.target.value)} className="w-20 h-8" />}
+                                  <Label className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Giữa các thẻ</Label>
+                                  <RadioGroup value={cardSeparator} onValueChange={setCardSeparator} className="space-y-3">
+                                    <div className="flex items-center space-x-3"><RadioGroupItem value="newline" id="c-nl" className="w-5 h-5 text-indigo-600 border-indigo-600" /><Label htmlFor="c-nl" className="text-base font-medium cursor-pointer">Dòng mới</Label></div>
+                                    <div className="flex items-center space-x-3"><RadioGroupItem value="semicolon" id="c-semi" className="w-5 h-5 text-indigo-600 border-indigo-600" /><Label htmlFor="c-semi" className="text-base font-medium cursor-pointer">Chấm phẩy</Label></div>
+                                    <div className="flex items-center space-x-3 h-10">
+                                      <RadioGroupItem value="custom" id="c-custom" className="w-5 h-5 text-indigo-600 border-indigo-600" />
+                                      <Label htmlFor="c-custom" className="text-base font-medium cursor-pointer w-24">Tùy chỉnh</Label>
+                                      {cardSeparator === 'custom' && <Input value={customCardSep} onChange={e => setCustomCardSep(e.target.value)} className="w-20 h-10 text-center font-bold border-slate-300" />}
                                     </div>
                                   </RadioGroup>
                                 </div>
                               </div>
-                              <div className="mt-4 border-t pt-6">
-                                <h3 className="text-lg font-bold mb-4">Xem trước <span className="text-slate-500 font-normal text-sm ml-1">{parsedCardsPreview().length} thẻ</span></h3>
-                                {parsedCardsPreview().length === 0 ? (
-                                  <p className="text-slate-500 italic text-sm">Không có nội dung để xem trước</p>
-                                ) : (
-                                  <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
-                                    {parsedCardsPreview().slice(0, 50).map((card, i) => (
-                                      <div key={i} className="flex gap-4 p-3 bg-slate-50 dark:bg-slate-900 border rounded">
-                                        <div className="w-1/2 break-words text-sm font-medium">{card.term}</div>
-                                        <div className="w-px bg-slate-200 dark:bg-slate-700 shrink-0"></div>
-                                        <div className="w-1/2 break-words text-sm text-slate-600 dark:text-slate-400">{card.definition}</div>
-                                      </div>
-                                    ))}
-                                    {parsedCardsPreview().length > 50 && <p className="text-center text-sm text-slate-500 py-2">... và {parsedCardsPreview().length - 50} thẻ nữa</p>}
-                                  </div>
-                                )}
+
+                              <div className="border-t border-slate-200 dark:border-slate-800 pt-8 mt-2 flex flex-col">
+                                <div className="flex items-center justify-between mb-4 px-2">
+                                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">Xem trước <span className="text-slate-500 font-normal text-base ml-2">{parsedCardsPreview().length} thẻ</span></h3>
+                                </div>
+                                <div>
+                                  {parsedCardsPreview().length === 0 ? (
+                                    <p className="text-slate-500 italic text-base px-2">Không có nội dung để xem trước</p>
+                                  ) : (
+                                    <div className="space-y-3 max-h-64 overflow-y-auto pr-2 custom-scrollbar px-2">
+                                      {parsedCardsPreview().slice(0, 50).map((card, i) => (
+                                        <div key={i} className="flex gap-4 p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-sm hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors">
+                                          <div className="w-1/2 break-words text-base font-medium text-slate-900 dark:text-slate-100">{card.term}</div>
+                                          <div className="w-px bg-slate-200 dark:bg-slate-800 shrink-0"></div>
+                                          <div className="w-1/2 break-words text-base text-slate-600 dark:text-slate-400">{card.definition}</div>
+                                        </div>
+                                      ))}
+                                      {parsedCardsPreview().length > 50 && <p className="text-center text-sm text-slate-500 py-4 font-medium">... và {parsedCardsPreview().length - 50} thẻ nữa</p>}
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             </div>
-                            <div className="p-4 border-t bg-slate-50 dark:bg-slate-900 flex justify-end shrink-0 gap-2">
-                              <Button variant="outline" onClick={() => setIsImportOpen(false)}>Hủy</Button>
-                              <Button onClick={handleImportSubmit} disabled={isParsing || parsedCardsPreview().length === 0} className="bg-indigo-600 hover:bg-indigo-700">
+                            <div className="px-6 py-5 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex justify-end shrink-0 gap-4">
+                              <Button variant="outline" className="h-11 px-6 text-base font-medium rounded-full bg-indigo-100/50 hover:bg-indigo-100 text-indigo-700 border-0" onClick={() => setIsImportOpen(false)}>Hủy</Button>
+                              <Button onClick={handleImportSubmit} disabled={isParsing || parsedCardsPreview().length === 0} className="h-11 px-8 text-base font-semibold rounded-full bg-indigo-400 hover:bg-indigo-500 text-white shadow-sm transition-all disabled:opacity-50">
                                 {isParsing ? 'Đang nhập...' : 'Nhập'}
                               </Button>
                             </div>
