@@ -14,7 +14,7 @@ Backend:
 - Express.js
 
 Database:
-- sqlite
+- sqlite==> khi nào cần thì dùng 
 - Prisma ORM
 
 ## Core Features
