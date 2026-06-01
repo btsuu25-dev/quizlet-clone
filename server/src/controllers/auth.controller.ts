@@ -10,11 +10,12 @@ export class AuthController {
   
   static async register(req: Request, res: Response) {
     try {
-      const { email, password, name } = req.body;
+      let { email, password, name } = req.body;
 
       if (!email || !password || !name) {
         return res.status(400).json({ error: 'Missing required fields' });
       }
+      email = email.toLowerCase();
 
       // Check if user exists
       const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -49,11 +50,12 @@ export class AuthController {
 
   static async login(req: Request, res: Response) {
     try {
-      const { email, password } = req.body;
+      let { email, password } = req.body;
 
       if (!email || !password) {
         return res.status(400).json({ error: 'Missing email or password' });
       }
+      email = email.toLowerCase();
 
       // Find user
       const user = await prisma.user.findUnique({ where: { email } });
